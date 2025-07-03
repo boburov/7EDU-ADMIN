@@ -1,0 +1,90 @@
+import axios from 'axios';
+import apiEndpoins from '../api.endpoin';
+
+const api = axios.create({
+    baseURL: 'http://localhost:3000',
+    headers: {
+        "Content-Type": "multipart/form-data",
+    },
+});
+
+api.interceptors.request.use(config => {
+    const token = localStorage.getItem("token");
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+});
+
+api.interceptors.response.use(
+    res => res,
+    err => Promise.reject(err.response?.data?.message || err.message || "Xatolik")
+);
+
+export const getAllUser = async () => {
+    const res = await api.get(apiEndpoins.getUsers);
+    return res.data;
+};
+
+export const allCourse = async () => {
+    const res = await api.get(apiEndpoins.allCourse);
+    return res;
+};
+
+export const createCategory = (data: FormData) => {
+    return api.post(apiEndpoins.createCategor, data);
+};
+
+export const getUserByEmail = async (email: string) => {
+    const res = await api.get(`/user/by-email?email=${email}`);
+    return res;
+};
+
+export const deleteCategory = async (id: string) => {
+    return api.delete(apiEndpoins.deleteCategory(id));
+};
+
+export const updateCategory = (id: string, data: FormData) => {
+    return api.patch(apiEndpoins.getCategory(id), data);
+};
+
+export const getLessons = (id: string) => {
+    const res = api.get(apiEndpoins.getCategory(id))
+    return res
+}
+export const addLesson = (id: string, formData: FormData) => {
+    return api.post(apiEndpoins.addLesson(id), formData);
+};
+
+export const deleteLesson = (id: string) => {
+    return api.delete(apiEndpoins.deleteLesson(id))
+}
+
+export const updateLesson = (id: string, formData: FormData) => {
+    return api.patch(apiEndpoins.updateLesson(id), formData);
+};
+
+export const GetCourseById = async (id: string) => {
+    try {
+        const res = await api.get(apiEndpoins.getCategory(id))
+        return res
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const addMemeberToCourse = async (email: string, courseId: string) => {
+  try {
+    const res = await api.post("/user/assign-course", { email, courseId }, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+
+
+export default api;

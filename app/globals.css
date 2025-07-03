@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #F4F5F9;
+}
+
+body {
+  @apply bg-gradient-to-br from-[#1e1e2f] to-[#15161d]
+}
+
+.input-style {
+  @apply border border-gray-300 bg-white rounded-lg px-4 py-2 text-gray-800 focus:ring-2 focus:ring-indigo-400 outline-none;
+}
+.input {
+  @apply w-full px-4 py-2 rounded-xl border border-white/20 bg-white/5 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-500;
+}
+.glass {
+  @apply backdrop-blur-md bg-white/10 border border-white/20 shadow-lg;
+}
