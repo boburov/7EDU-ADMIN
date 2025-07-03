@@ -37,24 +37,12 @@ const Page = () => {
     getAllUser()
       .then((res) => {
         setUsers(res);
-
-        // 🔍 Tekshiruv logikasi:
-        const emailToFind = "sevenedu@gmail.com";
-        const passwordToFind = "sevenedu123admin";
-
-        const found = res.find(
-          (u: User) => u.email === emailToFind && u.password === passwordToFind
-        );
-
-        if (!found) {
-          console.log("Foydalanuvchi topilmadi, redirect qilinyapti...");
-          router.push("/signup");
-        }
       })
       .catch((err) => {
         console.error("Error fetching users:", err);
       });
   }, []);
+
 
   const filteredUsers = users.filter((user) =>
     user.email.toLowerCase().includes(search.toLowerCase())
