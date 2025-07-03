@@ -52,9 +52,9 @@ export default function AddDictionaryPage() {
         ...prev,
         [lessonId]: { word: "", translated: "" },
       }));
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      alert(error.response?.data?.message || "Xatolik yuz berdi");
+      alert("❌ So‘z qo‘shishda xatolik yuz berdi. Iltimos, qayta urinib ko‘ring.");
     }
   };
 

@@ -39,6 +39,8 @@ console.log(email);
       toast.success("Kursga muvaffaqiyatli qo‘shildingiz!");
     } catch (error) {
       toast.error("Qo‘shishda xatolik yuz berdi");
+      console.log(error);
+      
     }
   };
 

@@ -8,9 +8,20 @@ import {
 } from "@/app/api/service/api";
 import { Trash, Pencil, BookPlus, ArrowUp } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+
+interface CourseType {
+  id: string;
+  title: string;
+  goal: string;
+  shortName: string;
+  thumbnail: string;
+  lessons: { id: string }[];
+}
+
 
 const Page = () => {
-  const [course, setCourse] = useState<any[]>([]);
+  const [course, setCourse] = useState<CourseType[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState({ title: "", goal: "", shortName: "", file: null as File | null });
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -29,7 +40,7 @@ const Page = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleEdit = (c: any) => {
+  const handleEdit = (c:CourseType) => {
     setEditingId(c.id);
     setEditData({ title: c.title, goal: c.goal, shortName: c.shortName, file: null });
   };
@@ -109,7 +120,7 @@ const Page = () => {
             key={c.id}
             className="bg-white/30 backdrop-blur-md border border-white/40 shadow-lg rounded-2xl transition-transform hover:scale-[1.015] duration-300 flex overflow-hidden"
           >
-            <img
+            <Image
               src={c.thumbnail}
               alt={c.title}
               className="w-36 h-36 object-cover rounded-l-2xl"

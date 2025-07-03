@@ -4,6 +4,24 @@ import React, { useEffect, useState } from 'react';
 import { allCourse, getAllUser } from '@/app/api/service/api';
 import axios from 'axios';
 
+interface CourseType {
+  id: string;
+  title: string;
+}
+
+interface UserType {
+  id: string;
+  email: string;
+}
+
+interface NotificationPayload {
+  title: string;
+  message: string;
+  isGlobal: boolean;
+  userIds?: string[];
+  courseId?: string;
+}
+
 const CreateNotificationForm = () => {
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
@@ -13,8 +31,9 @@ const CreateNotificationForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  const [courses, setCourses] = useState<any[]>([]);
-  const [users, setUsers] = useState<any[]>([]);
+  const [courses, setCourses] = useState<CourseType[]>([]);
+  const [users, setUsers] = useState<UserType[]>([]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,18 +45,20 @@ const CreateNotificationForm = () => {
       return;
     }
 
-    const payload: any = {
+
+    const payload: NotificationPayload = {
       title,
       message,
       isGlobal: recipientType === 'global',
     };
+
 
     if (recipientType === 'user') payload.userIds = selectedUsers;
     if (recipientType === 'course') payload.courseId = courseId.trim();
 
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:3000/notifications/create', payload, {
+      await axios.post('http://localhost:3000/notifications/create', payload, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -49,9 +70,15 @@ const CreateNotificationForm = () => {
       setSelectedUsers([]);
       setCourseId('');
       setRecipientType('global');
-    } catch (err: any) {
-      setError(err?.response?.data?.message || err.message || 'Noma’lum xatolik yuz berdi');
-    } finally {
+    } catch (err: unknown) {
+      const errorMsg =
+        err && typeof err === 'object' && 'message' in err
+          ? (err as { message: string })?.message
+          : 'Noma’lum xatolik yuz berdi';
+
+      setError(errorMsg);
+    }
+    finally {
       setLoading(false);
     }
   };
@@ -130,7 +157,7 @@ const CreateNotificationForm = () => {
               }
               className="w-full h-40 px-4 py-2 bg-[#181818] border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             >
-              {users.map((user: any) => (
+              {users.map((user: UserType) => (
                 <option key={user.id} value={user.id}>
                   {user.email}
                 </option>
@@ -148,7 +175,7 @@ const CreateNotificationForm = () => {
               className="w-full px-4 py-2 bg-[#181818] border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               <option value="">Kurs tanlang</option>
-              {courses.map((course: any) => (
+              {courses.map((course: CourseType) => (
                 <option key={course.id} value={course.id}>
                   {course.title}
                 </option>
@@ -160,11 +187,10 @@ const CreateNotificationForm = () => {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-2 rounded-lg font-semibold transition duration-200 ease-in-out ${
-            loading
-              ? 'bg-gray-600 cursor-not-allowed'
-              : 'bg-green-600 hover:bg-green-700 text-white'
-          }`}
+          className={`w-full py-2 rounded-lg font-semibold transition duration-200 ease-in-out ${loading
+            ? 'bg-gray-600 cursor-not-allowed'
+            : 'bg-green-600 hover:bg-green-700 text-white'
+            }`}
         >
           {loading ? 'Yuborilmoqda...' : 'Yaratish'}
         </button>

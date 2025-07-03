@@ -5,11 +5,6 @@ import { getAllUser, allCourse, GetCourseById } from '@/app/api/service/api';
 import { Eye } from 'lucide-react';
 import { Dialog } from '@headlessui/react';
 
-interface Lesson {
-  id: string;
-  title: string;
-}
-
 interface Notification {
   notification: {
     title: string;
@@ -35,19 +30,23 @@ interface User {
   notifications: Notification[];
 }
 
+interface CourseDetails {
+  id: string;
+  title: string;
+}
+
 const UserDashboard = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [open, setOpen] = useState(false);
-  const [userCourses, setUserCourses] = useState<any[]>([]);
+const [userCourses, setUserCourses] = useState<CourseDetails[]>([]);
+
 
   useEffect(() => {
     Promise.all([getAllUser(), allCourse()])
       .then(([userRes, courseRes]) => {
         setUsers(userRes);
-        setCourses(courseRes.data);
       })
       .finally(() => setLoading(false));
   }, []);

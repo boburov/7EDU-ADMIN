@@ -33,6 +33,8 @@ const DictionaryPage = () => {
   const fetchData = async () => {
     const res = await allCourse();
     setCourse(res.data || []);
+    console.log(res.data);
+    
   };
 
   useEffect(() => {

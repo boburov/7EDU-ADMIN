@@ -91,21 +91,21 @@ const Page = () => {
             {openMenuId === user.id && (
               <ul className="absolute top-12 right-4 z-50 bg-white border border-gray-200 rounded-xl shadow-lg w-44 text-sm font-medium text-gray-700 divide-y overflow-hidden">
                 <li className="p-3 hover:bg-gray-100 flex items-center gap-2 cursor-pointer">
-                  <BadgeInfo className="w-4 h-4" /> Ma'lumotlar
+                  <BadgeInfo className="w-4 h-4" /> {`Ma'lumotlar`}
                 </li>
                 <li className="p-3 hover:bg-gray-100 flex items-center gap-2 cursor-pointer">
-                  <MessageSquare className="w-4 h-4" /> SMS jo‘natish
+                  <MessageSquare className="w-4 h-4" /> SMS jo&#39;natish
                 </li>
                 <li
                 >
                   <Link
                     className="p-3 hover:bg-gray-100 flex items-center gap-2 cursor-pointer"
                     href={"addmember/" + user.email}>
-                    <GraduationCap className="w-4 h-4" /> Kursga qo'shish
+                    <GraduationCap className="w-4 h-4" /> Kursga {`qo'shish`}
                   </Link>
                 </li>
                 <li className="p-3 hover:bg-gray-100 flex items-center gap-2 cursor-pointer text-red-500">
-                  <Trash2 className="w-4 h-4" /> O‘chirish
+                  <Trash2 className="w-4 h-4" /> O‘chirish 
                 </li>
               </ul>
             )}
