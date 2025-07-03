@@ -140,7 +140,7 @@ const Page = () => {
                   href={`courses/${c.id}`}
                   className="flex items-center gap-2 text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 text-xs rounded-lg transition"
                 >
-                  <BookPlus size={14} />{`dars qo'shish`}
+                 <BookPlus size={14} />{"dars qo\u0027shish"}
                 </Link>
                 <div className="flex gap-2">
                   <button

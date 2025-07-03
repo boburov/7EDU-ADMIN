@@ -26,7 +26,7 @@ interface User {
   coins?: number;
   isVerified?: boolean;
   courses: Course[];
-  showedLesson: any[];
+  showedLesson: LessonProgress[];
   notifications: Notification[];
 }
 
@@ -34,6 +34,12 @@ interface CourseDetails {
   id: string;
   title: string;
 }
+
+interface LessonProgress {
+  lessonId: string;
+  watchedAt: string;
+}
+
 
 const UserDashboard = () => {
   const [users, setUsers] = useState<User[]>([]);
