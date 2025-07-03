@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getAllUser, allCourse, GetCourseById } from '@/app/api/service/api';
+import { getAllUser, GetCourseById } from '@/app/api/service/api';
 import { Eye } from 'lucide-react';
 import { Dialog } from '@headlessui/react';
 
@@ -17,6 +17,11 @@ interface Notification {
 interface Course {
   courseId: string;
   isFinished: boolean;
+}
+
+interface LessonProgress {
+  lessonId: string;
+  watchedAt: string;
 }
 
 interface User {
@@ -35,12 +40,6 @@ interface CourseDetails {
   title: string;
 }
 
-interface LessonProgress {
-  lessonId: string;
-  watchedAt: string;
-}
-
-
 const UserDashboard = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,10 +47,9 @@ const UserDashboard = () => {
   const [open, setOpen] = useState(false);
   const [userCourses, setUserCourses] = useState<CourseDetails[]>([]);
 
-
   useEffect(() => {
-    Promise.all([getAllUser(), allCourse()])
-      .then(([userRes]) => {
+    getAllUser()
+      .then((userRes) => {
         setUsers(userRes);
       })
       .finally(() => setLoading(false));
@@ -65,7 +63,7 @@ const UserDashboard = () => {
       const courseDetails = await Promise.all(
         user.courses.map((c) => GetCourseById(c.courseId))
       );
-      setUserCourses(courseDetails.map(res => res?.data));
+      setUserCourses(courseDetails.map((res) => res?.data));
     } else {
       setUserCourses([]);
     }
