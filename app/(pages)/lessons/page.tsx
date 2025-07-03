@@ -21,7 +21,7 @@ interface CourseType {
 
 
 const Page = () => {
-  const [course, setCourse] = useState<any[]>([]);
+  const [course, setCourse] = useState<CourseType[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState({ title: "", goal: "", shortName: "", file: null as File | null });
   const [showScrollTop, setShowScrollTop] = useState(false);
