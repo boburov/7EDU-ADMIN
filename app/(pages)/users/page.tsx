@@ -40,12 +40,12 @@ const UserDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [open, setOpen] = useState(false);
-const [userCourses, setUserCourses] = useState<CourseDetails[]>([]);
+  const [userCourses, setUserCourses] = useState<CourseDetails[]>([]);
 
 
   useEffect(() => {
     Promise.all([getAllUser(), allCourse()])
-      .then(([userRes, courseRes]) => {
+      .then(([userRes]) => {
         setUsers(userRes);
       })
       .finally(() => setLoading(false));

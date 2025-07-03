@@ -21,7 +21,7 @@ interface CourseType {
 
 
 const Page = () => {
-  const [course, setCourse] = useState<CourseType[]>([]);
+  const [course, setCourse] = useState<any[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState({ title: "", goal: "", shortName: "", file: null as File | null });
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -40,7 +40,7 @@ const Page = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleEdit = (c:CourseType) => {
+  const handleEdit = (c: CourseType) => {
     setEditingId(c.id);
     setEditData({ title: c.title, goal: c.goal, shortName: c.shortName, file: null });
   };
@@ -140,7 +140,7 @@ const Page = () => {
                   href={`courses/${c.id}`}
                   className="flex items-center gap-2 text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 text-xs rounded-lg transition"
                 >
-                  <BookPlus size={14} /> dars qo'shish
+                  <BookPlus size={14} />{`dars qo'shish`}
                 </Link>
                 <div className="flex gap-2">
                   <button
