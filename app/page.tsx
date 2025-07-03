@@ -10,21 +10,24 @@ import {
   Trash2,
   MessageSquare,
   Search,
-  GraduationCap
+  GraduationCap,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface User {
   id: string;
   name: string;
   email: string;
   surname: string;
+  password?: string; // ← agar passwordni ham tekshirish kerak bo‘lsa
 }
 
 const Page = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const router = useRouter();
 
   const toggleMenu = (id: string) => {
     setOpenMenuId(openMenuId === id ? null : id);
@@ -34,6 +37,19 @@ const Page = () => {
     getAllUser()
       .then((res) => {
         setUsers(res);
+
+        // 🔍 Tekshiruv logikasi:
+        const emailToFind = "sevenedu@gmail.com";
+        const passwordToFind = "sevenedu123admin";
+
+        const found = res.find(
+          (u: User) => u.email === emailToFind && u.password === passwordToFind
+        );
+
+        if (!found) {
+          console.log("Foydalanuvchi topilmadi, redirect qilinyapti...");
+          router.push("/signup");
+        }
       })
       .catch((err) => {
         console.error("Error fetching users:", err);
@@ -46,7 +62,6 @@ const Page = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-6">
-      {/* Search Input */}
       <div className="relative max-w-md mx-auto">
         <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
         <input
@@ -96,16 +111,16 @@ const Page = () => {
                 <li className="p-3 hover:bg-gray-100 flex items-center gap-2 cursor-pointer">
                   <MessageSquare className="w-4 h-4" /> SMS jo&#39;natish
                 </li>
-                <li
-                >
+                <li>
                   <Link
                     className="p-3 hover:bg-gray-100 flex items-center gap-2 cursor-pointer"
-                    href={"addmember/" + user.email}>
+                    href={"addmember/" + user.email}
+                  >
                     <GraduationCap className="w-4 h-4" /> Kursga {`qo'shish`}
                   </Link>
                 </li>
                 <li className="p-3 hover:bg-gray-100 flex items-center gap-2 cursor-pointer text-red-500">
-                  <Trash2 className="w-4 h-4" /> O‘chirish 
+                  <Trash2 className="w-4 h-4" /> O‘chirish
                 </li>
               </ul>
             )}

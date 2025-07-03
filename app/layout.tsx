@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import SideBar from "./components/SideBar";
 import { ToastContainer } from "react-toastify";
+import AuthWrapper from "./AuthWrapper";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,9 +19,11 @@ export default function RootLayout({
       <body
         className={`pl-96`}
       >
-        <SideBar />
-        <ToastContainer />
-        {children}
+        <AuthWrapper>
+          <SideBar />
+          <ToastContainer />
+          {children}
+        </AuthWrapper>
       </body>
     </html>
   );

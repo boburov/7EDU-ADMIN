@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const jsonApi = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://sevenedu.store",
   headers: {
     "Content-Type": "application/json",
   },
