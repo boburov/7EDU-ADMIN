@@ -27,7 +27,6 @@ const Page = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const router = useRouter();
 
   const toggleMenu = (id: string) => {
     setOpenMenuId(openMenuId === id ? null : id);
