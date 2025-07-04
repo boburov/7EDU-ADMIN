@@ -13,14 +13,13 @@ import {
   GraduationCap,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 interface User {
   id: string;
   name: string;
   email: string;
   surname: string;
-  password?: string; // ← agar passwordni ham tekshirish kerak bo‘lsa
+  password?: string; 
 }
 
 const Page = () => {
