@@ -72,17 +72,31 @@ export const GetCourseById = async (id: string) => {
 }
 
 export const addMemeberToCourse = async (email: string, courseId: string) => {
-  try {
-    const res = await api.post("/user/assign-course", { email, courseId }, {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-    return res.data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+    try {
+        const res = await api.post("/user/assign-course", { email, courseId }, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
+export const createQuiz = async (lessonId: string, formData: FormData) => {
+    try {
+        const res = await api.post(`/quizs/${lessonId}/create`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        });
+        return res.data;
+    } catch (error) {
+        console.error("Error creating quiz:", error);
+        throw error;
+    }
 };
 
 

@@ -19,7 +19,7 @@ const SideBar = () => {
     { label: "Bosh Sahifa", href: "/", icon: Home },
     { label: "Kurs Yaratish", href: "/courses", icon: PlusSquare },
     { label: "Lug'at Qo'shish", href: "/dictionary", icon: BookA },
-    { label: "Test Qo'shish", href: "/tests", icon: PlusSquare },
+    { label: "Test Qo'shish", href: "/quiz", icon: PlusSquare },
     { label: "Foydalanuvchilarga Sms", href: "/send-sms", icon: MessageSquareIcon },
     { label: "Dars Qo'shish", href: "/lessons", icon: PlusSquare },
     { label: "Foydalanuvchilar", href: "/users", icon: User2Icon },

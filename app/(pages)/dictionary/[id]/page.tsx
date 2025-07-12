@@ -4,10 +4,18 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import api from "@/app/api/service/api";
 import jsonApi from "@/app/api/service/jsonAPI";
+import { Pencil, Trash2 } from "lucide-react";
+
+interface DictionaryWord {
+  id: string;
+  word: string;
+  translated: string;
+}
 
 interface Lesson {
   id: string;
   title: string;
+  dictonary?: DictionaryWord[];
 }
 
 export default function AddDictionaryPage() {
@@ -17,17 +25,27 @@ export default function AddDictionaryPage() {
 
   useEffect(() => {
     if (courseId) {
-      api.get(`/courses/category/${courseId}`).then((res) => {
-        setLessons(res.data.lessons || []);
+      api.get(`/courses/category/${courseId}`).then(async (res) => {
+        const lessonsWithDicts = await Promise.all(
+          res.data.lessons.map(async (lesson: Lesson) => {
+            try {
+              const lessonRes = await api.get(`/courses/lessons/${lesson.id}`);
+              return { ...lessonRes.data };
+            } catch {
+              return { ...lesson, dictonary: [] };
+            }
+          })
+        );
+        setLessons(lessonsWithDicts);
       });
     }
   }, [courseId]);
 
-  const handleChange = (lessonId: string, field: "word" | "translated", value: string) => {
+  const handleChange = (key: string, field: "word" | "translated", value: string) => {
     setInputs((prev) => ({
       ...prev,
-      [lessonId]: {
-        ...prev[lessonId],
+      [key]: {
+        ...prev[key],
         [field]: value,
       },
     }));
@@ -35,7 +53,6 @@ export default function AddDictionaryPage() {
 
   const handleSubmit = async (lessonId: string) => {
     const { word, translated } = inputs[lessonId] || {};
-
     if (!word || !translated) {
       alert("Iltimos, so‘z va tarjimani kiriting.");
       return;
@@ -46,15 +63,55 @@ export default function AddDictionaryPage() {
         word: word.trim(),
         translated: translated.trim(),
       });
-
       alert("✅ So‘z muvaffaqiyatli qo‘shildi!");
-      setInputs((prev) => ({
-        ...prev,
-        [lessonId]: { word: "", translated: "" },
-      }));
+      setInputs((prev) => ({ ...prev, [lessonId]: { word: "", translated: "" } }));
+
+      const updatedLesson = await api.get(`/courses/lessons/${lessonId}`);
+      setLessons((prev) =>
+        prev.map((lesson) =>
+          lesson.id === lessonId ? { ...lesson, dictonary: updatedLesson.data.dictonary } : lesson
+        )
+      );
     } catch (error) {
       console.error(error);
       alert("❌ So‘z qo‘shishda xatolik yuz berdi. Iltimos, qayta urinib ko‘ring.");
+    }
+  };
+
+  const handleEdit = async (wordId: string, lessonId: string) => {
+    const { word, translated } = inputs[wordId] || {};
+    if (!word || !translated) return;
+    try {
+      await jsonApi.patch(`/dictonary/${wordId}`, {
+        word: word.trim(),
+        translated: translated.trim(),
+      });
+      alert("✅ Tahrir muvaffaqiyatli bajarildi");
+      const updatedLesson = await api.get(`/courses/lessons/${lessonId}`);
+      setLessons((prev) =>
+        prev.map((lesson) =>
+          lesson.id === lessonId ? { ...lesson, dictonary: updatedLesson.data.dictonary } : lesson
+        )
+      );
+    } catch (e) {
+      console.error(e);
+      alert("❌ Tahrir qilishda xatolik yuz berdi");
+    }
+  };
+
+  const handleDelete = async (wordId: string, lessonId: string) => {
+    if (!confirm("Bu so‘zni o‘chirib tashlamoqchimisiz?")) return;
+    try {
+      await jsonApi.delete(`/dictonary/${wordId}`);
+      const updatedLesson = await api.get(`/courses/lessons/${lessonId}`);
+      setLessons((prev) =>
+        prev.map((lesson) =>
+          lesson.id === lessonId ? { ...lesson, dictonary: updatedLesson.data.dictonary } : lesson
+        )
+      );
+    } catch (e) {
+      console.error(e);
+      alert("❌ O‘chirishda xatolik yuz berdi");
     }
   };
 
@@ -77,7 +134,36 @@ export default function AddDictionaryPage() {
                 🧠 {lesson.title}
               </h2>
 
-              <div className="flex flex-col md:flex-row gap-4 mb-4">
+              {lesson.dictonary?.map((word) => (
+                <div key={word.id} className="flex flex-col md:flex-row gap-4 mb-2 items-center">
+                  <input
+                    type="text"
+                    value={inputs[word.id]?.word ?? word.word}
+                    onChange={(e) => handleChange(word.id, "word", e.target.value)}
+                    className="flex-1 px-4 py-2 rounded-lg border border-gray-600 bg-[#12131c] placeholder-gray-500 text-white focus:ring-2 focus:ring-yellow-500 outline-none shadow-sm"
+                  />
+                  <input
+                    type="text"
+                    value={inputs[word.id]?.translated ?? word.translated}
+                    onChange={(e) => handleChange(word.id, "translated", e.target.value)}
+                    className="flex-1 px-4 py-2 rounded-lg border border-gray-600 bg-[#12131c] placeholder-gray-500 text-white focus:ring-2 focus:ring-yellow-500 outline-none shadow-sm"
+                  />
+                  <button
+                    onClick={() => handleEdit(word.id, lesson.id)}
+                    className="p-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white shadow hover:shadow-yellow-400"
+                  >
+                    <Pencil className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(word.id, lesson.id)}
+                    className="p-2 rounded-lg bg-red-500 hover:bg-red-600 text-white shadow hover:shadow-red-400"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                </div>
+              ))}
+
+              <div className="flex flex-col md:flex-row gap-4 mt-6">
                 <input
                   type="text"
                   placeholder="So‘z (EN)"
@@ -97,7 +183,7 @@ export default function AddDictionaryPage() {
 
               <button
                 onClick={() => handleSubmit(lesson.id)}
-                className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-xl font-semibold transition-all shadow-md hover:shadow-green-400"
+                className="mt-3 bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-xl font-semibold transition-all shadow-md hover:shadow-green-400"
               >
                 ➕ Lug‘atni qo‘shish
               </button>

@@ -7,11 +7,7 @@ import {
   updateLesson,
 } from "@/app/api/service/api";
 import { useParams } from "next/navigation";
-import {
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface Lesson {
   id: string;
@@ -33,8 +29,10 @@ const LessonsPage = () => {
   const { id } = useParams() as { id: string };
 
   const fetchLessons = useCallback(async () => {
+    setLoading(true);
     const res = await getLessons(id);
     setLessons(res.data.lessons);
+    setLoading(false);
   }, [id]);
 
   useEffect(() => {
@@ -68,21 +66,13 @@ const LessonsPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title) {
-      return alert("Dars nomi kiritilishi shart!");
-    }
-
-    if (!file && !editMode) {
-      return alert("Video fayl yuklash shart!");
-    }
+    if (!title) return alert("Dars nomi kiritilishi shart!");
+    if (!file && !editMode) return alert("Video fayl yuklash shart!");
 
     const formData = new FormData();
     formData.append("title", title);
     formData.append("isDemo", String(isDemo));
-
-    if (file) {
-      formData.append("video", file);
-    }
+    if (file) formData.append("video", file);
 
     setLoading(true);
     try {
@@ -90,17 +80,15 @@ const LessonsPage = () => {
         const res = await updateLesson(editId, formData);
         if (res.status === 200) {
           alert("Dars tahrirlandi!");
-          resetForm();
-          fetchLessons();
         }
       } else {
         const res = await addLesson(id, formData);
         if (res.status === 201 || res.status === 200) {
           alert("Dars qo‘shildi!");
-          resetForm();
-          fetchLessons();
         }
       }
+      resetForm();
+      fetchLessons();
     } catch (error) {
       console.error("Xatolik:", error);
       alert("Xatolik yuz berdi.");
@@ -110,8 +98,10 @@ const LessonsPage = () => {
   };
 
   const handleDelete = async (lessonId: string) => {
+    setLoading(true);
     await deleteLesson(lessonId);
     fetchLessons();
+    setLoading(false);
   };
 
   const handleEdit = (lesson: Lesson) => {
@@ -126,117 +116,139 @@ const LessonsPage = () => {
   };
 
   return (
-    <div className="px-6 py-16 text-gray-800 w-full">
-      <form onSubmit={handleSubmit} className="mb-8">
-        <label
-          htmlFor="upload"
-          className="cursor-pointer border-2 border-dashed border-gray-400 hover:border-green-500 transition-colors rounded-2xl w-full max-w-md flex flex-col items-center justify-center gap-4 px-6 py-12 bg-white shadow-md hover:shadow-lg"
-        >
-          <p className="text-lg font-medium text-gray-600">Fayl yuklash uchun bosing</p>
-          <input
-            type="file"
-            id="upload"
-            accept="video/*"
-            className="hidden"
-            onChange={onFileChange}
-          />
-        </label>
+    <div className="px-4 py-10 lg:px-10 w-full text-gray-800">
 
-        {videoPreview && (
-          <video
-            width="320"
-            height="240"
-            controls
-            src={videoPreview}
-            className="mt-4 rounded-md"
-          />
-        )}
-
-        <input
-          type="text"
-          placeholder="Dars nomi"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="mt-4 w-full max-w-md px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm transition"
-        />
-
-        <div className="mt-4 flex gap-6 mb-3">
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="radio"
-              name="demo"
-              checked={isDemo}
-              onChange={() => setIsDemo(true)}
-              className="peer hidden"
-            />
-            <div className="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all peer-checked:border-green-600 peer-checked:bg-green-100">
-              <div className="w-2.5 h-2.5 rounded-full bg-green-600 opacity-0 peer-checked:opacity-100 transition-opacity" />
-            </div>
-            <span className="text-gray-700 font-medium">Demo dars</span>
-          </label>
-
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="radio"
-              name="demo"
-              checked={!isDemo}
-              onChange={() => setIsDemo(false)}
-              className="peer hidden"
-            />
-            <div className="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all peer-checked:border-green-600 peer-checked:bg-green-100">
-              <div className="w-2.5 h-2.5 rounded-full bg-green-600 opacity-0 peer-checked:opacity-100 transition-opacity" />
-            </div>
-            <span className="text-gray-700 font-medium">To‘liq dars</span>
-          </label>
+      {/* Spinner */}
+      {loading && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
+          <div className="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin" />
         </div>
+      )}
 
-        <div className="flex gap-4">
-          <button
-            type="submit"
-            disabled={loading}
-            className="py-3 bg-sky-500 text-white rounded-xl w-1/4"
+      {/* Form Section */}
+      <div className="bg-white rounded-2xl shadow-xl p-6 max-w-2xl mx-auto">
+        <h2 className="text-2xl font-semibold mb-6">📚 Dars qo‘shish yoki tahrirlash</h2>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Upload */}
+          <label
+            htmlFor="upload"
+            className="cursor-pointer border-2 border-dashed border-gray-300 hover:border-sky-500 transition-colors rounded-xl flex flex-col items-center justify-center px-6 py-10"
           >
-            <strong>{editMode ? "Darsni tahrirlash" : "Darsni qo'shish"}</strong>
-          </button>
+            <p className="text-base font-medium text-gray-600">🎥 Video fayl yuklash</p>
+            <input
+              type="file"
+              id="upload"
+              accept="video/*"
+              className="hidden"
+              onChange={onFileChange}
+            />
+          </label>
 
-          {editMode && (
-            <button
-              type="button"
-              onClick={resetForm}
-              className="py-3 bg-red-400 text-white rounded-xl w-1/4"
-            >
-              Bekor qilish
-            </button>
+          {/* Preview */}
+          {videoPreview && (
+            <video width="100%" height="240" controls className="rounded-lg shadow">
+              <source src={videoPreview} type="video/mp4" />
+            </video>
           )}
-        </div>
-      </form>
 
-      <div className="mt-4 bg-white shadow-2xl rounded-xl p-3">
-        <p>
-          <strong>Darslar Soni :</strong> {lessons.length}
-        </p>
+          {/* Title */}
+          <input
+            type="text"
+            placeholder="✏️ Dars nomi"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm"
+          />
+
+          {/* Demo/Full Choice */}
+          <div className="flex gap-6 items-center">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="radio"
+                name="demo"
+                checked={isDemo}
+                onChange={() => setIsDemo(true)}
+                className="peer hidden"
+              />
+              <div className="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:border-sky-500 peer-checked:bg-sky-100">
+                <div className="w-2 h-2 rounded-full bg-sky-500 opacity-0 peer-checked:opacity-100" />
+              </div>
+              <span className="text-gray-700">Demo dars</span>
+            </label>
+
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="radio"
+                name="demo"
+                checked={!isDemo}
+                onChange={() => setIsDemo(false)}
+                className="peer hidden"
+              />
+              <div className="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:border-sky-500 peer-checked:bg-sky-100">
+                <div className="w-2 h-2 rounded-full bg-sky-500 opacity-0 peer-checked:opacity-100" />
+              </div>
+              <span className="text-gray-700">To‘liq dars</span>
+            </label>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex gap-4">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`flex-1 py-3 bg-sky-500 text-white font-semibold rounded-xl transition ${loading ? "opacity-60 cursor-not-allowed" : "hover:bg-sky-600"
+                }`}
+            >
+              {editMode ? "Tahrirlash" : "Qo‘shish"}
+            </button>
+
+            {editMode && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="flex-1 py-3 bg-gray-300 text-gray-800 font-semibold rounded-xl hover:bg-gray-400"
+              >
+                Bekor qilish
+              </button>
+            )}
+          </div>
+        </form>
       </div>
 
-      <div className="mt-4 bg-white shadow-2xl rounded-xl p-3 w-full">
+      {/* Lessons Info */}
+      <div className="mt-10 mb-4 flex items-center justify-between">
+        <h3 className="text-xl font-semibold">📖 Darslar soni: {lessons.length}</h3>
+      </div>
+
+      {/* Lessons List */}
+      <div className="grid md:grid-cols-4 gap-6">
         {lessons.map((lesson) => (
-          <div key={lesson.id} className="w-full mb-4">
-            <h1 className="text-xl font-bold">{lesson.title}</h1>
+          <div
+            key={lesson.id}
+            className="bg-white rounded-xl shadow-md p-4 flex flex-col gap-3"
+          >
+            <div className="flex items-center justify-between">
+              <h4 className="text-lg font-bold text-sky-700">{lesson.title}</h4>
+              <span className="text-sm text-gray-500">
+                {lesson.isDemo ? "🎬 Demo" : "✅ To‘liq"}
+              </span>
+            </div>
             {lesson.videoUrl && (
-              <video width="320" height="240" controls>
+              <video width="100%" height="240" controls className="rounded-lg">
                 <source src={lesson.videoUrl} type="video/mp4" />
               </video>
             )}
-            <p>{lesson.isDemo ? "Demo dars" : "To‘liq dars"}</p>
-            <div className="flex gap-4 mt-2">
+            <div className="flex justify-end gap-4">
               <button
                 onClick={() => handleEdit(lesson)}
-                className="text-blue-600"
+                className="text-blue-600 font-medium hover:underline"
               >
                 ✏️ Tahrirlash
               </button>
               <button
                 onClick={() => handleDelete(lesson.id)}
-                className="text-red-500"
+                className="text-red-500 font-medium hover:underline"
               >
                 🗑️ O‘chirish
               </button>
@@ -246,6 +258,7 @@ const LessonsPage = () => {
       </div>
     </div>
   );
+
 };
 
 export default LessonsPage;
