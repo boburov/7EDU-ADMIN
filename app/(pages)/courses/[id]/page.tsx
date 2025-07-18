@@ -1,7 +1,6 @@
 "use client";
 
-import {
-  addLesson,
+import api, {
   deleteLesson,
   getLessons,
   updateLesson,
@@ -21,10 +20,12 @@ const LessonsPage = () => {
   const [title, setTitle] = useState("");
   const [isDemo, setIsDemo] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | 0>(0);
   const [file, setFile] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const { id } = useParams() as { id: string };
 
@@ -61,6 +62,7 @@ const LessonsPage = () => {
     setIsDemo(false);
     setEditMode(false);
     setEditId(null);
+    setUploadProgress(0);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -82,7 +84,16 @@ const LessonsPage = () => {
           alert("Dars tahrirlandi!");
         }
       } else {
-        const res = await addLesson(id, formData);
+        const res = await api.post(`/courses/category/${id}/lesson`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          onUploadProgress: (progressEvent: any) => {
+            const percent = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 1));
+            setUploadProgress(percent);
+          }
+        });
         if (res.status === 201 || res.status === 200) {
           alert("Dars qo‘shildi!");
         }
@@ -98,10 +109,10 @@ const LessonsPage = () => {
   };
 
   const handleDelete = async (lessonId: string) => {
-    setLoading(true);
+    setDeletingId(lessonId);
     await deleteLesson(lessonId);
     fetchLessons();
-    setLoading(false);
+    setDeletingId(null);
   };
 
   const handleEdit = (lesson: Lesson) => {
@@ -117,20 +128,16 @@ const LessonsPage = () => {
 
   return (
     <div className="px-4 py-10 lg:px-10 w-full text-gray-800">
-
-      {/* Spinner */}
-      {loading && (
+      {loading && !editMode && (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
-          <div className="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin" />
+          <div className="w-14 h-14 border-4 border-t-transparent border-white rounded-full animate-spin" />
         </div>
       )}
 
-      {/* Form Section */}
       <div className="bg-white rounded-2xl shadow-xl p-6 max-w-2xl mx-auto">
         <h2 className="text-2xl font-semibold mb-6">📚 Dars qo‘shish yoki tahrirlash</h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Upload */}
           <label
             htmlFor="upload"
             className="cursor-pointer border-2 border-dashed border-gray-300 hover:border-sky-500 transition-colors rounded-xl flex flex-col items-center justify-center px-6 py-10"
@@ -145,14 +152,23 @@ const LessonsPage = () => {
             />
           </label>
 
-          {/* Preview */}
           {videoPreview && (
             <video width="100%" height="240" controls className="rounded-lg shadow">
               <source src={videoPreview} type="video/mp4" />
             </video>
           )}
 
-          {/* Title */}
+          {uploadProgress !== null && (
+            <div className="w-full bg-gray-200 rounded-full h-4 mt-4 overflow-hidden">
+              <div
+                className="bg-sky-500 h-4 text-white text-sm text-center transition-all duration-300"
+                style={{ width: `${uploadProgress ?? 0}%` }}
+              >
+                {uploadProgress}%
+              </div>
+            </div>
+          )}
+
           <input
             type="text"
             placeholder="✏️ Dars nomi"
@@ -161,7 +177,6 @@ const LessonsPage = () => {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm"
           />
 
-          {/* Demo/Full Choice */}
           <div className="flex gap-6 items-center">
             <label className="flex items-center gap-3 cursor-pointer">
               <input
@@ -192,7 +207,6 @@ const LessonsPage = () => {
             </label>
           </div>
 
-          {/* Buttons */}
           <div className="flex gap-4">
             <button
               type="submit"
@@ -200,7 +214,7 @@ const LessonsPage = () => {
               className={`flex-1 py-3 bg-sky-500 text-white font-semibold rounded-xl transition ${loading ? "opacity-60 cursor-not-allowed" : "hover:bg-sky-600"
                 }`}
             >
-              {editMode ? "Tahrirlash" : "Qo‘shish"}
+              {loading ? (editMode ? "Tahrirlanmoqda..." : "Qo‘shilmoqda...") : editMode ? "Tahrirlash" : "Qo‘shish"}
             </button>
 
             {editMode && (
@@ -216,17 +230,16 @@ const LessonsPage = () => {
         </form>
       </div>
 
-      {/* Lessons Info */}
       <div className="mt-10 mb-4 flex items-center justify-between">
         <h3 className="text-xl font-semibold">📖 Darslar soni: {lessons.length}</h3>
       </div>
 
-      {/* Lessons List */}
       <div className="grid md:grid-cols-4 gap-6">
         {lessons.map((lesson) => (
           <div
             key={lesson.id}
-            className="bg-white rounded-xl shadow-md p-4 flex flex-col gap-3"
+            className={`bg-white rounded-xl shadow-md p-4 flex flex-col gap-3 transition-opacity duration-300 ${deletingId === lesson.id ? "opacity-50 pointer-events-none" : ""
+              }`}
           >
             <div className="flex items-center justify-between">
               <h4 className="text-lg font-bold text-sky-700">{lesson.title}</h4>
@@ -258,7 +271,6 @@ const LessonsPage = () => {
       </div>
     </div>
   );
-
 };
 
 export default LessonsPage;

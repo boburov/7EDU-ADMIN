@@ -3,6 +3,7 @@ import apiEndpoins from '../api.endpoin';
 
 const api = axios.create({
     baseURL: 'https://sevenedu.store',
+    timeout: 1000 * 60 * 50,
     headers: {
         "Content-Type": "multipart/form-data",
     },
