@@ -89,7 +89,7 @@ const LessonsPage = () => {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          onUploadProgress: (progressEvent: any) => {
+          onUploadProgress: (progressEvent: ProgressEvent & { loaded: number; total: number }) => {
             const percent = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 1));
             setUploadProgress(percent);
           }

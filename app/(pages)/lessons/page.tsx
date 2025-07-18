@@ -120,7 +120,7 @@ const Page = () => {
             key={c.id}
             className="bg-white/30 backdrop-blur-md border border-white/40 shadow-lg rounded-2xl transition-transform hover:scale-[1.015] duration-300 flex overflow-hidden"
           >
-            <img
+            <Image
               src={c.thumbnail}
               alt={c.title}
               className="w-36 h-36 object-cover rounded-l-2xl"
