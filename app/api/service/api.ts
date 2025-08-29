@@ -56,12 +56,14 @@ export const addLesson = (id: string, formData: FormData) => {
 };
 
 export const deleteLesson = (id: string) => {
-    return api.delete(apiEndpoins.deleteLesson(id))
+    return api.patch(`/courses/lesson/${id}`)
 }
 
 export const updateLesson = (id: string, formData: FormData) => {
     return api.patch(apiEndpoins.updateLesson(id), formData);
 };
+
+
 
 export const GetCourseById = async (id: string) => {
     try {
@@ -86,20 +88,13 @@ export const addMemeberToCourse = async (email: string, courseId: string) => {
     }
 };
 
-export const createQuiz = async (lessonId: string, formData: FormData) => {
-    try {
-        const res = await api.post(`/quizs/${lessonId}/create`, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        });
-        return res.data;
-    } catch (error) {
-        console.error("Error creating quiz:", error);
-        throw error;
-    }
+export const createQuiz = async (lessonId: string, data: any) => {
+  return await api.post(`/quizs/${lessonId}/create`, data, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
 };
-
-
 
 export default api;
