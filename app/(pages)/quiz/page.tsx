@@ -8,7 +8,6 @@ import {
 } from "@/app/api/service/api";
 import { Trash, Pencil, BookPlus, ArrowUp } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 interface CourseType {
   id: string;

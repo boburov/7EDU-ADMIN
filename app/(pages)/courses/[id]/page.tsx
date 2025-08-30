@@ -27,7 +27,6 @@ const LessonsPage = () => {
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const { id } = useParams() as { id: string };
 
@@ -140,7 +139,7 @@ const LessonsPage = () => {
       )}
 
       <div className="bg-white rounded-2xl shadow-xl p-6 max-w-2xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-6">📚 Dars qo'shish yoki tahrirlash</h2>
+        <h2 className="text-2xl font-semibold mb-6">📚 Dars qo&apos;shish yoki tahrirlash</h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <label
@@ -208,7 +207,7 @@ const LessonsPage = () => {
               <div className="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:border-sky-500 peer-checked:bg-sky-100">
                 <div className="w-2 h-2 rounded-full bg-sky-500 opacity-0 peer-checked:opacity-100" />
               </div>
-              <span className="text-gray-700">To'liq dars</span>
+              <span className="text-gray-700">To&apos;liq dars</span>
             </label>
           </div>
 
@@ -221,7 +220,7 @@ const LessonsPage = () => {
                 onChange={(e) => setIsVisible(e.target.checked)}
                 className="w-4 h-4 text-sky-500 rounded focus:ring-sky-500"
               />
-              <span className="text-gray-700">Ko'rinadimi?</span>
+              <span className="text-gray-700">Ko&apos;rinadimi?</span>
             </label>
           </div>
 
@@ -232,7 +231,7 @@ const LessonsPage = () => {
               className={`flex-1 py-3 bg-sky-500 text-white font-semibold rounded-xl transition ${loading ? "opacity-60 cursor-not-allowed" : "hover:bg-sky-600"
                 }`}
             >
-              {loading ? (editMode ? "Tahrirlanmoqda..." : "Qo'shilmoqda...") : editMode ? "Tahrirlash" : "Qo'shish"}
+              {loading ? (editMode ? "Tahrirlanmoqda..." : "Qo&apos;shilmoqda...") : editMode ? "Tahrirlash" : "Qo&apos;shish"}
             </button>
 
             {editMode && (
@@ -257,8 +256,7 @@ const LessonsPage = () => {
           if (lesson.isVisible === true) {
             return <div
               key={lesson.id}
-              className={`bg-white rounded-xl shadow-md p-4 flex flex-col justify-between gap-3 transition-all duration-300 ${deletingId === lesson.id ? "opacity-50 pointer-events-none" : ""
-                } ${!lesson.isVisible ? "bg-gray-100 opacity-70 border-l-4 border-red-500 hidden" : ""
+              className={`bg-white rounded-xl shadow-md p-4 flex flex-col justify-between gap-3 transition-all duration-300 ${!lesson.isVisible ? "bg-gray-100 opacity-70 border-l-4 border-red-500 hidden" : ""
                 }`}
             >
               <div className="flex items-center justify-between">
@@ -268,10 +266,10 @@ const LessonsPage = () => {
                     ? "bg-green-100 text-green-800"
                     : "bg-red-100 text-red-800"
                     }`}>
-                    {lesson.isVisible ? "🟢 Ko'rinadi" : "🔴 O'chirilgan"}
+                    {lesson.isVisible ? "🟢 Ko'rinadi" : "🔴 O&apos;chirilgan"}
                   </span>
                   <span className="text-sm text-gray-500">
-                    {lesson.isDemo ? "🎬 Demo" : "✅ To'liq"}
+                    {lesson.isDemo ? "🎬 Demo" : "✅ To&apos;liq"}
                   </span>
                 </div>
               </div>
@@ -293,7 +291,7 @@ const LessonsPage = () => {
                   onClick={() => handleDelete(lesson.id)}
                   className="text-red-500 font-medium hover:underline"
                 >
-                  🗑️ O'chirish
+                  🗑️ O&apos;chirish
                 </button>
               </div>
             </div>

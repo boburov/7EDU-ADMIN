@@ -88,7 +88,13 @@ export const addMemeberToCourse = async (email: string, courseId: string) => {
     }
 };
 
-export const createQuiz = async (lessonId: string, data: any) => {
+interface QuizData {
+  question: string;
+  options: string[];
+  correctAnswer: string;
+}
+
+export const createQuiz = async (lessonId: string, data: QuizData) => {
   return await api.post(`/quizs/${lessonId}/create`, data, {
     headers: {
       "Content-Type": "application/json",
