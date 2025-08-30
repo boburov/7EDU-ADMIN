@@ -13,14 +13,14 @@ interface Lesson {
   title: string;
   videoUrl: string;
   isDemo: boolean;
-  isVisible: boolean; // ✅ Yangi maydon
+  isVisible: boolean;
 }
 
 const LessonsPage = () => {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [title, setTitle] = useState("");
   const [isDemo, setIsDemo] = useState(false);
-  const [isVisible, setIsVisible] = useState(true); // ✅ Yangi state
+  const [isVisible, setIsVisible] = useState(true);
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | 0>(0);
   const [file, setFile] = useState<File | null>(null);
@@ -61,7 +61,7 @@ const LessonsPage = () => {
     setFile(null);
     setVideoPreview(null);
     setIsDemo(false);
-    setIsVisible(true); // ✅ Resetda ham true qilamiz
+    setIsVisible(true);
     setEditMode(false);
     setEditId(null);
     setUploadProgress(0);
@@ -76,7 +76,7 @@ const LessonsPage = () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("isDemo", String(isDemo));
-    formData.append("isVisible", String(isVisible)); // ✅ Yangi
+    formData.append("isVisible", String(isVisible));
     if (file) formData.append("video", file);
 
     setLoading(true);
@@ -97,10 +97,10 @@ const LessonsPage = () => {
               ((progressEvent.loaded || 0) * 100) / (progressEvent.total || 1)
             );
             setUploadProgress(percent);
-          }
+          },
         });
         if (res.status === 201 || res.status === 200) {
-          alert("Dars qo'shildi!");
+          alert("Dars qo&apos;shildi!");
         }
       }
       resetForm();
@@ -114,14 +114,14 @@ const LessonsPage = () => {
   };
 
   const handleDelete = async (lessonId: string) => {
-    deleteLesson(lessonId)
+    deleteLesson(lessonId);
     console.log(lessonId);
   };
 
   const handleEdit = (lesson: Lesson) => {
     setTitle(lesson.title);
     setIsDemo(lesson.isDemo);
-    setIsVisible(lesson.isVisible); // ✅ Yangi
+    setIsVisible(lesson.isVisible);
     setEditId(lesson.id);
     setEditMode(true);
     setFile(null);
@@ -139,14 +139,18 @@ const LessonsPage = () => {
       )}
 
       <div className="bg-white rounded-2xl shadow-xl p-6 max-w-2xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-6">📚 Dars qo&apos;shish yoki tahrirlash</h2>
+        <h2 className="text-2xl font-semibold mb-6">
+          📚 Dars qo&apos;shish yoki tahrirlash
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <label
             htmlFor="upload"
             className="cursor-pointer border-2 border-dashed border-gray-300 hover:border-sky-500 transition-colors rounded-xl flex flex-col items-center justify-center px-6 py-10"
           >
-            <p className="text-base font-medium text-gray-600">🎥 Video fayl yuklash</p>
+            <p className="text-base font-medium text-gray-600">
+              🎥 Video fayl yuklash
+            </p>
             <input
               type="file"
               id="upload"
@@ -157,7 +161,12 @@ const LessonsPage = () => {
           </label>
 
           {videoPreview && (
-            <video width="100%" height="240" controls className="rounded-lg shadow">
+            <video
+              width="100%"
+              height="240"
+              controls
+              className="rounded-lg shadow"
+            >
               <source src={videoPreview} type="video/mp4" />
             </video>
           )}
@@ -211,7 +220,6 @@ const LessonsPage = () => {
             </label>
           </div>
 
-          {/* ✅ Yangi: IsVisible toggle */}
           <div className="flex items-center gap-3">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -228,10 +236,19 @@ const LessonsPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`flex-1 py-3 bg-sky-500 text-white font-semibold rounded-xl transition ${loading ? "opacity-60 cursor-not-allowed" : "hover:bg-sky-600"
-                }`}
+              className={`flex-1 py-3 bg-sky-500 text-white font-semibold rounded-xl transition ${
+                loading
+                  ? "opacity-60 cursor-not-allowed"
+                  : "hover:bg-sky-600"
+              }`}
             >
-              {loading ? (editMode ? "Tahrirlanmoqda..." : "Qo&apos;shilmoqda...") : editMode ? "Tahrirlash" : "Qo&apos;shish"}
+              {loading
+                ? editMode
+                  ? "Tahrirlanmoqda..."
+                  : "Qo&apos;shilmoqda..."
+                : editMode
+                ? "Tahrirlash"
+                : "Qo&apos;shish"}
             </button>
 
             {editMode && (
@@ -248,53 +265,74 @@ const LessonsPage = () => {
       </div>
 
       <div className="mt-10 mb-4 flex items-center justify-between">
-        <h3 className="text-xl font-semibold text-white">📖 Darslar soni: {lessons.filter(every_lessons => every_lessons.isVisible === true).length}</h3>
+        <h3 className="text-xl font-semibold text-white">
+          📖 Darslar soni:{" "}
+          {lessons.filter((every_lessons) => every_lessons.isVisible === true)
+            .length}
+        </h3>
       </div>
 
       <div className="grid md:grid-cols-4 gap-6">
-        {lessons.map(lesson => {
+        {lessons.map((lesson) => {
           if (lesson.isVisible === true) {
-            return <div
-              key={lesson.id}
-              className={`bg-white rounded-xl shadow-md p-4 flex flex-col justify-between gap-3 transition-all duration-300 ${!lesson.isVisible ? "bg-gray-100 opacity-70 border-l-4 border-red-500 hidden" : ""
+            return (
+              <div
+                key={lesson.id}
+                className={`bg-white rounded-xl shadow-md p-4 flex flex-col justify-between gap-3 transition-all duration-300 ${
+                  !lesson.isVisible
+                    ? "bg-gray-100 opacity-70 border-l-4 border-red-500 hidden"
+                    : ""
                 }`}
-            >
-              <div className="flex items-center justify-between">
-                <h4 className="text-lg font-bold text-sky-700">{lesson.title}</h4>
-                <div className="flex items-center gap-2">
-                  <span className={`text-xs px-2 py-1 rounded-full ${lesson.isVisible
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
-                    }`}>
-                    {lesson.isVisible ? "🟢 Ko'rinadi" : "🔴 O&apos;chirilgan"}
-                  </span>
-                  <span className="text-sm text-gray-500">
-                    {lesson.isDemo ? "🎬 Demo" : "✅ To&apos;liq"}
-                  </span>
+              >
+                <div className="flex items-center justify-between">
+                  <h4 className="text-lg font-bold text-sky-700">
+                    {lesson.title}
+                  </h4>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full ${
+                        lesson.isVisible
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {lesson.isVisible
+                        ? "🟢 Ko&apos;rinadi"
+                        : "🔴 O&apos;chirilgan"}
+                    </span>
+                    <span className="text-sm text-gray-500">
+                      {lesson.isDemo ? "🎬 Demo" : "✅ To&apos;liq"}
+                    </span>
+                  </div>
+                </div>
+
+                {lesson.videoUrl && (
+                  <video
+                    width="100%"
+                    height="240"
+                    controls
+                    className="rounded-lg"
+                  >
+                    <source src={lesson.videoUrl} type="video/mp4" />
+                  </video>
+                )}
+
+                <div className="flex justify-end gap-4">
+                  <button
+                    onClick={() => handleEdit(lesson)}
+                    className="text-blue-600 font-medium hover:underline"
+                  >
+                    ✏️ Tahrirlash
+                  </button>
+                  <button
+                    onClick={() => handleDelete(lesson.id)}
+                    className="text-red-500 font-medium hover:underline"
+                  >
+                    🗑️ O&apos;chirish
+                  </button>
                 </div>
               </div>
-
-              {lesson.videoUrl && (
-                <video width="100%" height="240" controls className="rounded-lg">
-                  <source src={lesson.videoUrl} type="video/mp4" />
-                </video>
-              )}
-
-              <div className="flex justify-end gap-4">
-                <button
-                  onClick={() => handleEdit(lesson)}
-                  className="text-blue-600 font-medium hover:underline"
-                >
-                  ✏️ Tahrirlash
-                </button>
-                <button
-                  onClick={() => handleDelete(lesson.id)}
-                  className="text-red-500 font-medium hover:underline"
-                >
-                  🗑️ O&apos;chirish
-                </button>
-              </div>
-            </div>
+            );
           }
         })}
       </div>
