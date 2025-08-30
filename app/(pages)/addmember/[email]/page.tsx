@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { addMemeberToCourse, allCourse, getUserByEmail } from "@/app/api/service/api";
-import Image from "next/image";
+import { addMemeberToCourse, allCourse, } from "@/app/api/service/api";
 import { toast } from "react-toastify";
 import { useParams } from "next/navigation";
 
