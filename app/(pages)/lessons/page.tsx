@@ -8,7 +8,6 @@ import {
 } from "@/app/api/service/api";
 import { Trash, Pencil, BookPlus, ArrowUp } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 interface CourseType {
   id: string;
@@ -16,7 +15,10 @@ interface CourseType {
   goal: string;
   shortName: string;
   thumbnail: string;
-  lessons: { id: string }[];
+  lessons: {
+    id: string,
+    isVisible: boolean
+  }[];
 }
 
 
@@ -120,7 +122,7 @@ const Page = () => {
             key={c.id}
             className="bg-white/30 backdrop-blur-md border border-white/40 shadow-lg rounded-2xl transition-transform hover:scale-[1.015] duration-300 flex overflow-hidden"
           >
-            <Image
+            <img
               src={c.thumbnail}
               alt={c.title}
               className="w-36 h-36 object-cover rounded-l-2xl"
@@ -132,8 +134,9 @@ const Page = () => {
                 </h3>
                 <p className="text-sm text-gray-600 mt-1 line-clamp-2">{c.goal}</p>
                 <p className="text-xs text-gray-500 mt-2">
-                  Darslar soni: <strong>{c.lessons.length}</strong>
+                  Darslar soni: <strong>{c.lessons.filter(e => e.isVisible).length}</strong>
                 </p>
+
               </div>
               <div className="flex justify-between items-center mt-4">
                 <Link

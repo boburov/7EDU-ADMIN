@@ -132,7 +132,7 @@ const LessonsPage = () => {
   };
 
   return (
-    <div className="px-4 py-10 lg:px-10 w-full text-gray-800">
+    <div className="px-4 py-10 lg:px-10 w-full text-gray-800 min-h-screen">
       {loading && !editMode && (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
           <div className="w-14 h-14 border-4 border-t-transparent border-white rounded-full animate-spin" />
@@ -249,54 +249,56 @@ const LessonsPage = () => {
       </div>
 
       <div className="mt-10 mb-4 flex items-center justify-between">
-        <h3 className="text-xl font-semibold">📖 Darslar soni: {lessons.length}</h3>
+        <h3 className="text-xl font-semibold text-white">📖 Darslar soni: {lessons.filter(every_lessons => every_lessons.isVisible === true).length}</h3>
       </div>
 
       <div className="grid md:grid-cols-4 gap-6">
-        {lessons.map((lesson) => (
-          <div
-            key={lesson.id}
-            className={`bg-white rounded-xl shadow-md p-4 flex flex-col justify-between gap-3 transition-all duration-300 ${deletingId === lesson.id ? "opacity-50 pointer-events-none" : ""
-              } ${!lesson.isVisible ? "bg-gray-100 opacity-70 border-l-4 border-red-500 hidden" : ""
-              }`}
-          >
-            <div className="flex items-center justify-between">
-              <h4 className="text-lg font-bold text-sky-700">{lesson.title}</h4>
-              <div className="flex items-center gap-2">
-                <span className={`text-xs px-2 py-1 rounded-full ${lesson.isVisible
+        {lessons.map(lesson => {
+          if (lesson.isVisible === true) {
+            return <div
+              key={lesson.id}
+              className={`bg-white rounded-xl shadow-md p-4 flex flex-col justify-between gap-3 transition-all duration-300 ${deletingId === lesson.id ? "opacity-50 pointer-events-none" : ""
+                } ${!lesson.isVisible ? "bg-gray-100 opacity-70 border-l-4 border-red-500 hidden" : ""
+                }`}
+            >
+              <div className="flex items-center justify-between">
+                <h4 className="text-lg font-bold text-sky-700">{lesson.title}</h4>
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs px-2 py-1 rounded-full ${lesson.isVisible
                     ? "bg-green-100 text-green-800"
                     : "bg-red-100 text-red-800"
-                  }`}>
-                  {lesson.isVisible ? "🟢 Ko'rinadi" : "🔴 O'chirilgan"}
-                </span>
-                <span className="text-sm text-gray-500">
-                  {lesson.isDemo ? "🎬 Demo" : "✅ To'liq"}
-                </span>
+                    }`}>
+                    {lesson.isVisible ? "🟢 Ko'rinadi" : "🔴 O'chirilgan"}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    {lesson.isDemo ? "🎬 Demo" : "✅ To'liq"}
+                  </span>
+                </div>
+              </div>
+
+              {lesson.videoUrl && (
+                <video width="100%" height="240" controls className="rounded-lg">
+                  <source src={lesson.videoUrl} type="video/mp4" />
+                </video>
+              )}
+
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={() => handleEdit(lesson)}
+                  className="text-blue-600 font-medium hover:underline"
+                >
+                  ✏️ Tahrirlash
+                </button>
+                <button
+                  onClick={() => handleDelete(lesson.id)}
+                  className="text-red-500 font-medium hover:underline"
+                >
+                  🗑️ O'chirish
+                </button>
               </div>
             </div>
-
-            {lesson.videoUrl && (
-              <video width="100%" height="240" controls className="rounded-lg">
-                <source src={lesson.videoUrl} type="video/mp4" />
-              </video>
-            )}
-
-            <div className="flex justify-end gap-4">
-              <button
-                onClick={() => handleEdit(lesson)}
-                className="text-blue-600 font-medium hover:underline"
-              >
-                ✏️ Tahrirlash
-              </button>
-              <button
-                onClick={() => handleDelete(lesson.id)}
-                className="text-red-500 font-medium hover:underline"
-              >
-                🗑️ O'chirish
-              </button>
-            </div>
-          </div>
-        ))}
+          }
+        })}
       </div>
     </div>
   );

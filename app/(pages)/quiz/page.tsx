@@ -16,7 +16,7 @@ interface CourseType {
   goal: string;
   shortName: string;
   thumbnail: string;
-  lessons: { id: string }[];
+  lessons: { id: string, isVisible: boolean }[];
 }
 
 const DictionaryPage = () => {
@@ -150,7 +150,7 @@ const DictionaryPage = () => {
                 <h3 className="text-base font-bold text-green-400">{c.shortName}: {c.title}</h3>
                 <p className="text-sm text-purple-200 mt-1 line-clamp-2">{c.goal}</p>
                 <p className="text-xs text-gray-400 mt-2">
-                  Darslar soni: <strong>{c.lessons.length}</strong>
+                  Darslar soni: <strong>{c.lessons.filter(d => d.isVisible).length}</strong>
                 </p>
               </div>
               <div className="flex justify-between items-center mt-4">

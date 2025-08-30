@@ -8,7 +8,7 @@ import {
 } from "@/app/api/service/api";
 import { Trash, Pencil, BookPlus, ArrowUp } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
+
 
 interface CourseType {
   id: string;
@@ -16,7 +16,7 @@ interface CourseType {
   goal: string;
   shortName: string;
   thumbnail: string;
-  lessons: { id: string }[];
+  lessons: { id: string, isVisible: boolean }[];
 }
 
 const DictionaryPage = () => {
@@ -79,7 +79,7 @@ const DictionaryPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] py-10 px-6 text-white relative">
+    <div className="min-h-screen py-10 px-6 text-white relative">
       {editingId && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
           <div className="bg-[#1a1b2f] text-white rounded-xl p-6 shadow-2xl w-full max-w-lg border border-purple-500/30">
@@ -133,53 +133,56 @@ const DictionaryPage = () => {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
-        {course.map((c) => (
-          <div
-            key={c.id}
-            className="bg-[#1a1b2f] border border-purple-800/40 rounded-2xl shadow-lg hover:scale-[1.015] transition transform duration-200 overflow-hidden flex flex-col"
-          >
-            <img
-              src={c.thumbnail}
-              alt={c.title}
-              width={500}
-              height={300}
-              className="w-full h-40 object-cover"
-            />
-            <div className="flex flex-col justify-between p-4 flex-1">
-              <div>
-                <h3 className="text-base font-bold text-green-400">{c.shortName}: {c.title}</h3>
-                <p className="text-sm text-purple-200 mt-1 line-clamp-2">{c.goal}</p>
-                <p className="text-xs text-gray-400 mt-2">
-                  Darslar soni: <strong>{c.lessons.length}</strong>
-                </p>
-              </div>
-              <div className="flex justify-between items-center mt-4">
-                <Link
-                  href={`dictionary/${c.id}`}
-                  className="flex items-center gap-2 text-white bg-green-600 hover:bg-green-700 px-3 py-1.5 text-xs rounded-lg transition"
-                >
-                  <BookPlus size={14} /> Lug‘at
-                </Link>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleEdit(c)}
-                    className="text-purple-400 hover:text-purple-300 transition"
-                    title="Tahrirlash"
+        {course.map((c) => {
+          return (
+            <div
+              key={c.id}
+              className="bg-[#1a1b2f] border border-purple-800/40 rounded-2xl shadow-lg hover:scale-[1.015] transition transform duration-200 overflow-hidden flex flex-col"
+            >
+              <img
+                src={c.thumbnail}
+                alt={c.title}
+                width={500}
+                height={300}
+                className="w-full h-40 object-cover"
+              />
+              <div className="flex flex-col justify-between p-4 flex-1">
+                <div>
+                  <h3 className="text-base font-bold text-green-400">{c.shortName}: {c.title}</h3>
+                  <p className="text-sm text-purple-200 mt-1 line-clamp-2">{c.goal}</p>
+                  <p className="text-xs text-gray-400 mt-2">
+                    Darslar soni: <strong>{c.lessons.filter(d => d.isVisible === true).length}</strong>
+                  </p>
+                </div>
+                <div className="flex justify-between items-center mt-4">
+                  <Link
+                    href={`dictionary/${c.id}`}
+                    className="flex items-center gap-2 text-white bg-green-600 hover:bg-green-700 px-3 py-1.5 text-xs rounded-lg transition"
                   >
-                    <Pencil size={16} />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(c.id)}
-                    className="text-red-500 hover:text-red-400 transition"
-                    title="O‘chirish"
-                  >
-                    <Trash size={16} />
-                  </button>
+                    <BookPlus size={14} /> Lug‘at
+                  </Link>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEdit(c)}
+                      className="text-purple-400 hover:text-purple-300 transition"
+                      title="Tahrirlash"
+                    >
+                      <Pencil size={16} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(c.id)}
+                      className="text-red-500 hover:text-red-400 transition"
+                      title="O‘chirish"
+                    >
+                      <Trash size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        }
+        )}
 
       </div>
 

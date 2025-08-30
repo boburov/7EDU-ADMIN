@@ -17,7 +17,7 @@ interface CourseType {
   goal: string;
   shortName: string;
   thumbnail: string;
-  lessons: { id: string }[];
+  lessons: { id: string, isVisible: boolean }[];
 }
 
 const CoursesPage = () => {
@@ -168,7 +168,7 @@ const CoursesPage = () => {
               </Link>
               <h3 className="text-lg font-semibold">{c.shortName}: {c.title}</h3>
               <p className="text-sm text-white/60">{c.goal}</p>
-              <p className="text-sm text-white/50">Darslar soni: {c.lessons.length}</p>
+              <p className="text-sm text-white/50">Darslar soni: {c.lessons.filter(d => d.isVisible).length}</p>
               <div className="flex justify-between pt-2">
                 <button onClick={() => handleEdit(c)} className="flex items-center gap-1 text-indigo-400 hover:text-indigo-200">
                   <Pencil size={18} /> Tahrirlash
