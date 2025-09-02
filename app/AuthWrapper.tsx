@@ -15,7 +15,7 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
     if (!email || !password) {
       router.push("/login");
     }
-  }, []);
+  }, [router]);
 
   return (
     <>

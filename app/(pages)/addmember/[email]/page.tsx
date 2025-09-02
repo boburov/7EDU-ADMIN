@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { addMemeberToCourse, allCourse, } from "@/app/api/service/api";
 import { toast } from "react-toastify";
 import { useParams } from "next/navigation";
+import Image from "next/image";
 
 interface Course {
   id: string;
@@ -61,9 +62,11 @@ console.log(email);
               key={course.id}
               className="rounded-2xl border border-gray-200 bg-white/80 shadow-md hover:shadow-lg transition p-5 space-y-3"
             >
-              <img
+              <Image
                 src={course.thumbnail}
                 alt={course.name}
+                width={500}
+                height={200}
                 className="w-full h-40 object-cover rounded-xl"
               />
               <h2 className="text-xl font-bold text-gray-800">{course.name}</h2>

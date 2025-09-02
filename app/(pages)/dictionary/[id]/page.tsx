@@ -18,27 +18,24 @@ interface Lesson {
   dictonary?: DictionaryWord[];
 }
 
+interface Course {
+  id: string;
+  lessons: Lesson[];
+}
+
 export default function AddDictionaryPage() {
   const { id: courseId } = useParams();
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [inputs, setInputs] = useState<Record<string, { word: string; translated: string }>>({});
 
   useEffect(() => {
-    if (courseId) {
-      api.get(`/courses/category/${courseId}`).then(async (res) => {
-        const lessonsWithDicts = await Promise.all(
-          res.data.lessons.map(async (lesson: Lesson) => {
-            try {
-              const lessonRes = await api.get(`/courses/lessons/${lesson.id}`);
-              return { ...lessonRes.data };
-            } catch {
-              return { ...lesson, dictonary: [] };
-            }
-          })
-        );
-        setLessons(lessonsWithDicts);
-      });
-    }
+    api.get("courses/all").then((data) => {
+      const lessonData = data.data
+        .filter((e: Course) => e.id === courseId)[0]
+      setLessons(lessonData.lessons)
+      console.log(lessonData);
+
+    });
   }, [courseId]);
 
   const handleChange = (key: string, field: "word" | "translated", value: string) => {
@@ -125,17 +122,17 @@ export default function AddDictionaryPage() {
         <p className="text-center text-gray-400">Darslar hali mavjud emas.</p>
       ) : (
         <div className="space-y-6">
-          {lessons.map((lesson) => (
+          {lessons.map((lesson, index) => (
             <div
-              key={lesson.id}
+              key={lesson.id + index}
               className="bg-[#212231] border border-gray-700 rounded-2xl p-6 shadow-lg hover:shadow-green-500/40 transition-shadow"
             >
               <h2 className="text-xl font-semibold text-green-300 mb-4">
                 🧠 {lesson.title}
               </h2>
 
-              {lesson.dictonary?.map((word) => (
-                <div key={word.id} className="flex flex-col md:flex-row gap-4 mb-2 items-center">
+              {lesson.dictonary?.map((word, index) => (
+                <div key={`${word.id}-${index}`} className="flex flex-col md:flex-row gap-4 mb-2 items-center">
                   <input
                     type="text"
                     value={inputs[word.id]?.word ?? word.word}

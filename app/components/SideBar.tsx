@@ -2,10 +2,10 @@
 
 import {
   BookA,
+  ChartArea,
   Home,
   MessageSquareIcon,
   PlusSquare,
-  User2Icon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,7 +22,7 @@ const SideBar = () => {
     { label: "Test Qo'shish", href: "/quiz", icon: PlusSquare },
     { label: "Foydalanuvchilarga Sms", href: "/send-sms", icon: MessageSquareIcon },
     { label: "Dars Qo'shish", href: "/lessons", icon: PlusSquare },
-    { label: "Foydalanuvchilar", href: "/users", icon: User2Icon },
+    { label: "Bazadagi videolar", href: "/databse", icon: ChartArea },
   ];
 
   return (

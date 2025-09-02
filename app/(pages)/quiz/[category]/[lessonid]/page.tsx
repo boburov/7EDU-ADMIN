@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import api from "@/app/api/service/api";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 export default function AddQuizPage() {
   const router = useRouter();
-  const { lessonid } = useParams<{ lessonid: string }>();
   const [form, setForm] = useState({
     quession: "",
     option1: "",
@@ -38,13 +36,23 @@ export default function AddQuizPage() {
     }
 
     try {
-      await api.post(`/quizs/${lessonid}/create`, form);
+      const payload = {
+        quession,
+        option1,
+        option2,
+        option3,
+        current: current, // backend kutgan nom
+      };
+      console.log(payload);
+
+      // await api.post(`/quizs/${lessonid}/create`, payload);
       toast.success("Test muvaffaqiyatli qo‘shildi!");
-      router.back();
+      router.back()
     } catch {
       toast.error("Xatolik yuz berdi");
     }
   };
+
 
   return (
     <div className="max-w-2xl mx-auto mt-12 p-6 bg-white/5 border border-white/10 rounded-2xl shadow-lg backdrop-blur-lg">
