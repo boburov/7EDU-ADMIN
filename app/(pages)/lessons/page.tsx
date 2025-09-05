@@ -8,6 +8,7 @@ import {
 } from "@/app/api/service/api";
 import { Trash, Pencil, BookPlus, ArrowUp } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface CourseType {
   id: string;
@@ -122,9 +123,11 @@ const Page = () => {
             key={c.id}
             className="bg-white/30 backdrop-blur-md border border-white/40 shadow-lg rounded-2xl transition-transform hover:scale-[1.015] duration-300 flex overflow-hidden"
           >
-            <img
+            <Image
               src={c.thumbnail}
               alt={c.title}
+              width={144}
+              height={144}
               className="w-36 h-36 object-cover rounded-l-2xl"
             />
             <div className="flex flex-col justify-between p-4 flex-1">

@@ -8,6 +8,7 @@ import {
 } from "@/app/api/service/api";
 import { Trash, Pencil, BookPlus, ArrowUp } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 
 interface CourseType {
@@ -139,7 +140,7 @@ const DictionaryPage = () => {
               key={c.id}
               className="bg-[#1a1b2f] border border-purple-800/40 rounded-2xl shadow-lg hover:scale-[1.015] transition transform duration-200 overflow-hidden flex flex-col"
             >
-              <img
+              <Image
                 src={c.thumbnail}
                 alt={c.title}
                 width={500}
