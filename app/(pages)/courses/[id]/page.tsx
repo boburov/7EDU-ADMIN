@@ -87,7 +87,7 @@ const LessonsPage = () => {
           alert("Dars tahrirlandi!");
         }
       } else {
-        const res = await api.post(`/courses/category/${id}/lesson`, formData, {
+        const res = await api.post(`/courses/${id}/lesson`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -236,19 +236,18 @@ const LessonsPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`flex-1 py-3 bg-sky-500 text-white font-semibold rounded-xl transition ${
-                loading
+              className={`flex-1 py-3 bg-sky-500 text-white font-semibold rounded-xl transition ${loading
                   ? "opacity-60 cursor-not-allowed"
                   : "hover:bg-sky-600"
-              }`}
+                }`}
             >
               {loading
                 ? editMode
                   ? "Tahrirlanmoqda..."
                   : "Qo&apos;shilmoqda..."
                 : editMode
-                ? "Tahrirlash"
-                : "Qo&apos;shish"}
+                  ? "Tahrirlash"
+                  : "Qo&apos;shish"}
             </button>
 
             {editMode && (
@@ -278,11 +277,10 @@ const LessonsPage = () => {
             return (
               <div
                 key={lesson.id}
-                className={`bg-white rounded-xl shadow-md p-4 flex flex-col justify-between gap-3 transition-all duration-300 ${
-                  !lesson.isVisible
+                className={`bg-white rounded-xl shadow-md p-4 flex flex-col justify-between gap-3 transition-all duration-300 ${!lesson.isVisible
                     ? "bg-gray-100 opacity-70 border-l-4 border-red-500 hidden"
                     : ""
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <h4 className="text-lg font-bold text-sky-700">
@@ -290,11 +288,10 @@ const LessonsPage = () => {
                   </h4>
                   <div className="flex items-center gap-2">
                     <span
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        lesson.isVisible
+                      className={`text-xs px-2 py-1 rounded-full ${lesson.isVisible
                           ? "bg-green-100 text-green-800"
                           : "bg-red-100 text-red-800"
-                      }`}
+                        }`}
                     >
                       {lesson.isVisible
                         ? "🟢 Ko&apos;rinadi"
