@@ -26,9 +26,14 @@ const SideBar = () => {
     { label: "Kurs Yaratish", href: "/courses", icon: PlusSquare },
     { label: "Lug'at Qo'shish", href: "/dictionary", icon: BookA },
     { label: "Test Qo'shish", href: "/quiz", icon: PlusSquare },
-    { label: "Foydalanuvchilarga Sms", href: "/send-sms", icon: MessageSquareIcon },
+    {
+      label: "Foydalanuvchilarga Sms",
+      href: "/send-sms",
+      icon: MessageSquareIcon,
+    },
     { label: "Dars Qo'shish", href: "/lessons", icon: PlusSquare },
     { label: "Qayta joylashtrish", href: "/relocation", icon: Replace },
+    { label: "Savol Qo'shish", href: "/sentence-puzzle", icon: BookA },
   ];
 
   return (
@@ -36,19 +41,29 @@ const SideBar = () => {
       {/* Collapse Toggle Button */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className={`fixed top-6 z-50 bg-gradient-to-r from-blue-600 to-blue-500 text-white p-2 rounded-full shadow-lg transition-all duration-300 hover:from-blue-700 hover:to-blue-600 ${isCollapsed ? 'left-4' : 'left-[390px]'}`}
+        className={`fixed top-6 z-50 bg-gradient-to-r from-blue-600 to-blue-500 text-white p-2 rounded-full shadow-lg transition-all duration-300 hover:from-blue-700 hover:to-blue-600 ${
+          isCollapsed ? "left-4" : "left-[390px]"
+        }`}
       >
-        <ChevronRight className={`transition-transform ${isCollapsed ? 'rotate-180' : ''}`} size={20} />
+        <ChevronRight
+          className={`transition-transform ${isCollapsed ? "rotate-180" : ""}`}
+          size={20}
+        />
       </button>
 
-      <aside className={`fixed top-0 left-0 h-screen p-6 
+      <aside
+        className={`fixed top-0 left-0 h-screen p-6 
         bg-gradient-to-b from-gray-900 to-gray-800 backdrop-blur-lg border-r border-gray-700 shadow-2xl 
-        text-white flex flex-col z-40 transition-all duration-300 ${isCollapsed ? 'min-w-[80px]' : 'min-w-[390px]'}`}>
-
+        text-white flex flex-col z-40 transition-all duration-300 ${
+          isCollapsed ? "min-w-[80px]" : "min-w-[390px]"
+        }`}
+      >
         {/* Logo Section */}
         <Link
           href="/"
-          className={`flex items-center gap-3 mb-10 hover:opacity-90 transition ${isCollapsed ? 'justify-center' : ''}`}
+          className={`flex items-center gap-3 mb-10 hover:opacity-90 transition ${
+            isCollapsed ? "justify-center" : ""
+          }`}
         >
           <div className="relative w-10 h-10">
             <Image src={logo} alt="7edu logo" fill className="object-contain" />
@@ -70,10 +85,11 @@ const SideBar = () => {
               <li key={i}>
                 <Link
                   href={link.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
-                    ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg"
-                    : "hover:bg-gray-700/50 hover:text-blue-400 text-white/80"
-                    } ${isCollapsed ? 'justify-center' : ''}`}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
+                    isActive
+                      ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg"
+                      : "hover:bg-gray-700/50 hover:text-blue-400 text-white/80"
+                  } ${isCollapsed ? "justify-center" : ""}`}
                 >
                   <link.icon size={20} />
                   {!isCollapsed && (
@@ -92,7 +108,11 @@ const SideBar = () => {
 
         {/* User Section */}
         <div className="mt-auto">
-          <div className={`flex items-center gap-3 mb-4 p-3 rounded-lg bg-gray-800/50 ${isCollapsed ? 'justify-center' : ''}`}>
+          <div
+            className={`flex items-center gap-3 mb-4 p-3 rounded-lg bg-gray-800/50 ${
+              isCollapsed ? "justify-center" : ""
+            }`}
+          >
             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 flex items-center justify-center">
               <User size={20} />
             </div>

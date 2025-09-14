@@ -158,7 +158,7 @@ const CoursesPage = () => {
               className="glass p-4 rounded-2xl backdrop-blur-md bg-white/10 shadow-lg hover:scale-[1.02] transition space-y-3"
             >
               <Link href={`courses/${c.id}`}>
-                <Image
+                <img
                   src={c.thumbnail}
                   alt={c.title}
                   width={400}
