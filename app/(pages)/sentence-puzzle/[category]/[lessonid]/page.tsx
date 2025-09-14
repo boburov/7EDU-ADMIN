@@ -15,7 +15,7 @@ type Puzzle = {
 };
 
 export default function SentencePuzzleAdminUI() {
-  const { lessonId } = useParams();
+  const { lessonid } = useParams();
   const API_URL = "https://sevenedu.store"; // change if needed
   const api = axios.create({ baseURL: API_URL, timeout: 8000 });
 
@@ -30,10 +30,10 @@ export default function SentencePuzzleAdminUI() {
   const toastTimer = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!lessonId) return;
+    if (!lessonid) return;
     fetchPuzzles();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lessonId]);
+  }, [lessonid]);
 
   useEffect(() => {
     if (!toast) return;
@@ -44,7 +44,7 @@ export default function SentencePuzzleAdminUI() {
   const fetchPuzzles = async () => {
     try {
       setLoading(true);
-      const { data } = await api.get(`/sentence-puzzle/${lessonId}`);
+      const { data } = await api.get(`/sentence-puzzle/${lessonid}`);
       // normalize shape if backend returns nested data
       setPuzzles(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -71,7 +71,7 @@ export default function SentencePuzzleAdminUI() {
         setToast("Puzzle yangilandi ✅");
       } else {
         // POST
-        await api.post(`/sentence-puzzle/${lessonId}/create`, { sentence, answer });
+        await api.post(`/sentence-puzzle/${lessonid}/create`, { sentence, answer });
         setToast("Yangi puzzle qo'shildi 🎉");
       }
       resetForm();
@@ -117,7 +117,7 @@ export default function SentencePuzzleAdminUI() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `sentence-puzzles_${lessonId || "export"}.csv`;
+    a.download = `sentence-puzzles_${lessonid || "export"}.csv`;
     a.click();
     URL.revokeObjectURL(url);
     setToast("CSV yuklandi 📥");
@@ -136,7 +136,7 @@ export default function SentencePuzzleAdminUI() {
         <div className="flex items-center justify-between gap-4 mb-4">
           <div>
             <h1 className="text-2xl font-extrabold text-white">Sentence Puzzle — Admin</h1>
-            <p className="text-sm text-gray-400">Lesson: <span className="text-blue-300">{lessonId || '—'}</span></p>
+            <p className="text-sm text-gray-400">Lesson: <span className="text-blue-300">{lessonid || '—'}</span></p>
           </div>
           <div className="flex items-center gap-2">
             <button
