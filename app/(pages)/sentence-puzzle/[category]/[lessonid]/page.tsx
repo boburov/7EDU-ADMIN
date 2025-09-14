@@ -94,9 +94,6 @@ export default function SentencePuzzleAdminUI() {
   const handleDelete = async (id: string) => {
     if (!confirm("O'chirishni tasdiqlaysizmi?")) return;
     try {
-      // optimistic UI: remove immediately
-      const prev = puzzles;
-      setPuzzles((s) => s.filter((x) => x.id !== id));
       await api.delete(`/sentence-puzzle/${id}`);
       setToast("O'chirildi");
     } catch (err) {
